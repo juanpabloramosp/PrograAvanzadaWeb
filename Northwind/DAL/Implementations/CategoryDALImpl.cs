@@ -1,4 +1,6 @@
-﻿using BackEnd.Entities;
+﻿using DAL;
+using DAL.Implementations;
+using Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +15,7 @@ namespace BackEnd.DAL
     public class CategoryDALImpl : ICategoryDAL
     {
         NorthWindContext context;
+       
 
         public CategoryDALImpl()
         {
@@ -20,41 +23,22 @@ namespace BackEnd.DAL
 
         }
 
+        public CategoryDALImpl(NorthWindContext northWindContext)
+        {
+            this.context = northWindContext;
+        }
+
         public bool Add(Category entity)
         {
             try
             {
-                //sumar o calcular 
 
-                List<sp_GetCategoriesByName_Result> results;
-                string sql = "[dbo].[sp_add_Category] @CategoryName, @Description";
-                var param = new SqlParameter[] {
-                        new SqlParameter() {
-                            ParameterName = "@CategoryName",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Size = 10,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = entity.CategoryName
-                        },
-                          new SqlParameter() {
-                            ParameterName = "@Description",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Size = 10,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = entity.Description
-                        }
 
-                };
-
-                context.Database.ExecuteSqlRaw(sql, param);
-
-                return true;  
-
-                //using (UnidadDeTrabajo<Category> unidad = new UnidadDeTrabajo<Category>(context))
-                //{
-                //    unidad.genericDAL.Add(entity);
-                //    return unidad.Complete();
-                //}
+                using (UnidadDeTrabajo<Category> unidad = new UnidadDeTrabajo<Category>(context))
+                {
+                    unidad.genericDAL.Add(entity);
+                    return unidad.Complete();
+                }
 
             }
             catch (Exception)
@@ -143,44 +127,7 @@ namespace BackEnd.DAL
         }
 
 
-        public List<Category> GetByNameSP(string Name)
-        {
-
-
-            List<sp_GetCategoriesByName_Result> results;
-            string sql = "[dbo].[sp_GetCategoriesByName] @Name" ;
-            var param = new SqlParameter[] {
-                        new SqlParameter() {
-                            ParameterName = "@Name",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Size = 10,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = Name
-                        } };
-            
-            results = context.sp_GetCategoriesByName_Results.FromSqlRaw(sql, param)
-                    .ToListAsync()
-                    .Result;
-
-           
-
-
-            List<Category> categories = new List<Category>();
-            foreach (var item in results)
-            {
-                categories.Add(
-                    new Category
-                    {
-                        CategoryId = item.CategoryId,
-                        CategoryName = item.CategoryName,
-                        Description = item.Description,
-                        Picture = item.Picture
-                    });
-            }
-
-            return categories;
-        }
-
+      
         public bool Remove(Category entity)
         {
             bool result = false;
@@ -233,5 +180,7 @@ namespace BackEnd.DAL
 
             return result;
         }
+
+      
     }
 }

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DAL
+namespace DAL.Implementations
 {
     public class UnidadDeTrabajo<T> : IDisposable where T : class
     {
