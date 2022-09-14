@@ -32,13 +32,37 @@ namespace BackEnd.DAL
         {
             try
             {
+                //sumar o calcular 
 
+             
+                string sql = "[dbo].[sp_add_Category] @CategoryName, @Description";
+                var param = new SqlParameter[] {
+                        new SqlParameter() {
+                            ParameterName = "@CategoryName",
+                            SqlDbType =  System.Data.SqlDbType.VarChar,
+                            Size = 10,
+                            Direction = System.Data.ParameterDirection.Input,
+                            Value = entity.CategoryName
+                        },
+                          new SqlParameter() {
+                            ParameterName = "@Description",
+                            SqlDbType =  System.Data.SqlDbType.VarChar,
+                            Size = 10,
+                            Direction = System.Data.ParameterDirection.Input,
+                            Value = entity.Description
+                        }
 
-                using (UnidadDeTrabajo<Category> unidad = new UnidadDeTrabajo<Category>(context))
-                {
-                    unidad.genericDAL.Add(entity);
-                    return unidad.Complete();
-                }
+                };
+
+                context.Database.ExecuteSqlRaw(sql, param);
+
+                return true;
+
+                //using (UnidadDeTrabajo<Category> unidad = new UnidadDeTrabajo<Category>(context))
+                //{
+                //    unidad.genericDAL.Add(entity);
+                //    return unidad.Complete();
+                //}
 
             }
             catch (Exception)
@@ -112,6 +136,7 @@ namespace BackEnd.DAL
             }
         }
 
+
         public List<Category> GetByName(string Name)
         {
             List<Category> lista;
@@ -119,15 +144,54 @@ namespace BackEnd.DAL
             using (context = new NorthWindContext())
             {
                 lista = (from c in context.Categories
-                        where c.CategoryName.Contains(Name)
-                        select c).ToList();
+                         where c.CategoryName.Contains(Name)
+                         select c).ToList();
             }
             return lista;
 
         }
 
 
-      
+        public List<Category> GetByNameSP(string Name)
+        {
+
+
+            List<sp_GetCategoriesByName_Result> results;
+            string sql = "[dbo].[sp_GetCategoriesByName] @Name";
+            var param = new SqlParameter[] {
+                        new SqlParameter() {
+                            ParameterName = "@Name",
+                            SqlDbType =  System.Data.SqlDbType.VarChar,
+                            Size = 10,
+                            Direction = System.Data.ParameterDirection.Input,
+                            Value = Name
+                        } };
+
+            results = context.sp_GetCategoriesByName_Results.FromSqlRaw(sql, param)
+                    .ToListAsync()
+                    .Result;
+
+
+
+
+            List<Category> categories = new List<Category>();
+            foreach (var item in results)
+            {
+                categories.Add(
+                    new Category
+                    {
+                        CategoryId = item.CategoryId,
+                        CategoryName = item.CategoryName,
+                        Description = item.Description,
+                        Picture = item.Picture
+                    });
+            }
+
+            return categories;
+        }
+
+
+
         public bool Remove(Category entity)
         {
             bool result = false;
