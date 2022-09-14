@@ -1,4 +1,5 @@
 ﻿using BackEnd.DAL;
+using BackEnd.Models;
 using DAL;
 using Entities;
 
@@ -22,6 +23,37 @@ namespace BackEnd.Controllers
             categoryDAL = new CategoryDALImpl(new NorthWindContext());
         }
 
+        CategoryModel Convertir(Category category)
+        {
+
+            return new CategoryModel
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description
+                //,                Picture= category.Picture
+            };
+
+        }
+
+        Category Convertir(CategoryModel category)
+        {
+
+            return new Category
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+                Description = category.Description
+                //  ,                Picture = category.Picture
+            };
+
+        }
+
+
+
+
+
+
 
         #region Consultar
         // GET: api/<CategoryController>
@@ -33,7 +65,14 @@ namespace BackEnd.Controllers
             IEnumerable<Category> categories;
             categories = categoryDAL.GetAll();
 
-            return new JsonResult(categories);
+            List<CategoryModel> result = new List<CategoryModel>();
+            foreach (Category category in categories)
+            {
+                result.Add(Convertir(category));
+            }
+         
+
+            return new JsonResult(result);
         }
 
         // GET api/<CategoryController>/5
@@ -44,7 +83,7 @@ namespace BackEnd.Controllers
             Category category;
             category = categoryDAL.Get(id);
 
-            return new JsonResult(category);
+            return new JsonResult(Convertir(category));
         }
         #endregion
 
