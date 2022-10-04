@@ -34,35 +34,35 @@ namespace BackEnd.DAL
             {
                 //sumar o calcular 
 
-             
-                string sql = "[dbo].[sp_add_Category] @CategoryName, @Description";
-                var param = new SqlParameter[] {
-                        new SqlParameter() {
-                            ParameterName = "@CategoryName",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Size = 10,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = entity.CategoryName
-                        },
-                          new SqlParameter() {
-                            ParameterName = "@Description",
-                            SqlDbType =  System.Data.SqlDbType.VarChar,
-                            Size = 10,
-                            Direction = System.Data.ParameterDirection.Input,
-                            Value = entity.Description
-                        }
 
-                };
+                //string sql = "[dbo].[sp_add_Category] @CategoryName, @Description";
+                //var param = new SqlParameter[] {
+                //        new SqlParameter() {
+                //            ParameterName = "@CategoryName",
+                //            SqlDbType =  System.Data.SqlDbType.VarChar,
+                //            Size = 10,
+                //            Direction = System.Data.ParameterDirection.Input,
+                //            Value = entity.CategoryName
+                //        },
+                //          new SqlParameter() {
+                //            ParameterName = "@Description",
+                //            SqlDbType =  System.Data.SqlDbType.VarChar,
+                //            Size = 10,
+                //            Direction = System.Data.ParameterDirection.Input,
+                //            Value = entity.Description
+                //        }
 
-                context.Database.ExecuteSqlRaw(sql, param);
+                //};
 
-                return true;
+                //context.Database.ExecuteSqlRaw(sql, param);
 
-                //using (UnidadDeTrabajo<Category> unidad = new UnidadDeTrabajo<Category>(context))
-                //{
-                //    unidad.genericDAL.Add(entity);
-                //    return unidad.Complete();
-                //}
+                //return true;
+
+                using (UnidadDeTrabajo<Category> unidad = new UnidadDeTrabajo<Category>(context))
+                {
+                    unidad.genericDAL.Add(entity);
+                    return unidad.Complete();
+                }
 
             }
             catch (Exception)

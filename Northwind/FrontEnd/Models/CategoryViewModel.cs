@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ClienteAPI.Models
+namespace FrontEnd.Models
 {
     public class CategoryViewModel
     {

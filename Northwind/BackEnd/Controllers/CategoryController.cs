@@ -96,7 +96,7 @@ namespace BackEnd.Controllers
             try
             {
                 categoryDAL.Add(category);
-                return new JsonResult(category);
+                return new JsonResult(Convertir(category));
 
             }
             catch (Exception)
