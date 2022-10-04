@@ -24,7 +24,8 @@ namespace ClienteAPI.Controllers
                 response.EnsureSuccessStatusCode();
                 //List<Models.CategoryViewModel> categories = new List<Models.CategoryViewModel>();
                 var content = response.Content.ReadAsStringAsync().Result;
-                List<Models.CategoryViewModel> categories = JsonConvert.DeserializeObject<List<Models.CategoryViewModel>>(content);
+                List<Models.CategoryViewModel> categories = 
+                    JsonConvert.DeserializeObject<List<Models.CategoryViewModel>>(content);
 
                 ViewBag.Title = "All Categories";
                 return View(categories);
