@@ -90,12 +90,12 @@ namespace BackEnd.Controllers
         #region Agregar
         // POST api/<CategoryController>
         [HttpPost]
-        public JsonResult Post([FromBody] Category category)
+        public JsonResult Post([FromBody] CategoryModel category)
         {
 
             try
             {
-                categoryDAL.Add(category);
+                categoryDAL.Add(Convertir(category));
                 return new JsonResult(Convertir(category));
 
             }
@@ -111,11 +111,11 @@ namespace BackEnd.Controllers
 
         // PUT api/<CategoryController>/5
         [HttpPut]
-        public JsonResult Put([FromBody] Category category)
+        public JsonResult Put([FromBody] CategoryModel category)
         {
             try
             {
-                categoryDAL.Update(category);
+                categoryDAL.Update(Convertir(category));
                 return new JsonResult(category);
 
             }
