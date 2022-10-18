@@ -52,7 +52,7 @@ namespace BackEnd.Controllers
 
         public ProductController()
         {
-            productDAL = new ProductDALImpl(NorthWindContext.GetInstance());
+            productDAL = new ProductDALImpl(new NorthWindContext());
         }
         // GET: api/<ProductController>
         [HttpGet]
@@ -100,7 +100,7 @@ namespace BackEnd.Controllers
         {
 
             Product entity = Convertir(product);
-            productDAL.Add(entity);
+            productDAL.Update(entity);
 
             return new JsonResult(Convertir(entity));
         }
@@ -111,6 +111,7 @@ namespace BackEnd.Controllers
         {
 
             Product product = new Product { ProductId= id };
+            productDAL.Remove(product);
 
         }
     }

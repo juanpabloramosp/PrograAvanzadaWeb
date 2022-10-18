@@ -52,7 +52,7 @@ namespace BackEnd.Controllers
 
         public SupplierController()
         {
-            supplierDAL = new SupplierDALImpl(NorthWindContext.GetInstance());
+            supplierDAL = new SupplierDALImpl(new NorthWindContext());
         }
 
 

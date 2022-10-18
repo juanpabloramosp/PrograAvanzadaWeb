@@ -109,37 +109,61 @@ namespace FrontEnd.Controllers
         // GET: ProductController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            ServiceRepository serviceObj = new ServiceRepository();
+            HttpResponseMessage response = serviceObj.GetResponse("api/product/" + id.ToString());
+            response.EnsureSuccessStatusCode();
+            ProductViewModel ProductViewModel = response.Content.ReadAsAsync<ProductViewModel>().Result;
+
+            ProductViewModel.Categories = this.GetCategories();
+            ProductViewModel.Suppliers = this.GetSuppliers();
+            //ViewBag.Title = "All Products";
+            return View(ProductViewModel);
         }
 
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(ProductViewModel product)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+
+                ServiceRepository serviceObj = new ServiceRepository();
+                HttpResponseMessage response = serviceObj.PutResponse("api/product", product);
+                response.EnsureSuccessStatusCode();
+                ProductViewModel productViewModel = response.Content.ReadAsAsync<ProductViewModel>().Result;
+                return RedirectToAction("Details", new { id = productViewModel.ProductID });
             }
             catch
             {
                 return View();
             }
         }
-
+      
         // GET: ProductController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            
+            ServiceRepository serviceObj = new ServiceRepository();
+            HttpResponseMessage response = serviceObj.GetResponse("api/product/" + id.ToString());
+            response.EnsureSuccessStatusCode();
+            ProductViewModel ProductViewModel = response.Content.ReadAsAsync<ProductViewModel>().Result;
+
+            //ViewBag.Title = "All Products";
+            return View(ProductViewModel);
         }
 
         // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(ProductViewModel product)
         {
             try
             {
+                int id = product.ProductID;
+                ServiceRepository serviceObj = new ServiceRepository();
+                HttpResponseMessage response = serviceObj.DeleteResponse("api/product/" + id.ToString());
+                response.EnsureSuccessStatusCode();
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -20,7 +20,7 @@ namespace BackEnd.Controllers
 
         public CategoryController()
         {
-            categoryDAL = new CategoryDALImpl(NorthWindContext.GetInstance());
+            categoryDAL = new CategoryDALImpl(new NorthWindContext());
         }
 
         CategoryModel Convertir(Category category)
