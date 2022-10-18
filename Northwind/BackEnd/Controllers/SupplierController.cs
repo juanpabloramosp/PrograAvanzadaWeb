@@ -1,4 +1,5 @@
-﻿using DAL.Implementations;
+﻿using BackEnd.Models;
+using DAL.Implementations;
 using DAL.Interfaces;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,42 @@ namespace BackEnd.Controllers
     {
         private ISupplierDAL supplierDAL;
 
+
+        SupplierModel Convertir(Supplier supplier)
+        {
+            return new SupplierModel
+            {
+                SupplierId = supplier.SupplierId,
+                CompanyName = supplier.CompanyName
+            };
+        }
+
+        List<SupplierModel> Convertir(List<Supplier> suppliers)
+        {
+            List<SupplierModel> lista= new List<SupplierModel>();
+
+            foreach (Supplier supplier in suppliers)
+            {
+                lista.Add(Convertir(supplier));
+            }
+
+
+            return lista;
+        }
+
+
+
+        Supplier Convertir(SupplierModel supplier)
+        {
+            return new Supplier
+            {
+                SupplierId = supplier.SupplierId,
+                CompanyName = supplier.CompanyName
+            };
+        }
+
+
+
         public SupplierController()
         {
             supplierDAL = new SupplierDALImpl(NorthWindContext.GetInstance());
@@ -26,7 +63,10 @@ namespace BackEnd.Controllers
             List<Supplier> suppliers;    
             suppliers=supplierDAL.GetAll().ToList();
 
-            return new JsonResult(suppliers);
+
+
+
+            return new JsonResult(Convertir(suppliers));
         }
 
         // GET api/<SupplierController>/5
@@ -35,7 +75,7 @@ namespace BackEnd.Controllers
         {
             Supplier supplier;
             supplier = supplierDAL.Get(id);
-            return new JsonResult(supplier);
+            return new JsonResult(Convertir(supplier));
 
         }
 
