@@ -11,6 +11,28 @@ namespace Entities
         {
         }
 
+
+        #region Singleton
+
+        private static NorthWindContext instance = null;
+
+        public static NorthWindContext GetInstance()
+        {
+
+            if (instance == null)
+            {
+                instance = new NorthWindContext();
+            }
+            return instance;
+        }
+
+
+        #endregion Singleton
+
+
+
+
+
         public NorthWindContext(DbContextOptions<NorthWindContext> options)
             : base(options)
         {
